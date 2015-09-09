@@ -27,10 +27,17 @@ func TestInput(t *testing.T) {
 	assert.Equal(t, x, r)
 }
 
+func TestString(t *testing.T) {
+	var x bigNum
+	in := "12,54,45.12,6,8,7"
+	x.input(in, 60)
+	assert.Equal(t, x.String(), in)
+}
+
 func TestCalc(t *testing.T) {
 	var x, y bigNum
 	x.input("12,54,45.12,6,8,7", 60)
 	y.input("1,1,0,1.0,1,0,1,1", 2)
-	pp.Println("x", x)
-	pp.Println("y", y)
+	// pp.Println("x", x)
+	// pp.Println("y", y)
 }

@@ -40,6 +40,23 @@ func (x *bigNum) input(s string, base int) {
 	x.decimal = splitNum(right)
 }
 
+func (x *bigNum) String() (r string) {
+	var s []string
+	for i := len(x.integer) - 1; i >= 0; i-- {
+		s = append(s, strconv.Itoa(x.integer[i]))
+	}
+	r += strings.Join(s, ",")
+	if len(x.decimal) > 0 {
+		r += "."
+		s = []string{}
+		for i := 0; i < len(x.decimal); i++ {
+			s = append(s, strconv.Itoa(x.decimal[i]))
+		}
+		r += strings.Join(s, ",")
+	}
+	return
+}
+
 func splitNum(s string) (r []int) {
 	nums := strings.Split(s, ",")
 	for i := 0; i < len(nums); i++ {
