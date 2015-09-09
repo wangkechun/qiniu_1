@@ -4,7 +4,11 @@ import (
 	"log"
 	"strconv"
 	"strings"
+
+	"github.com/k0kubun/pp"
 )
+
+var _ = pp.Println
 
 func init() {
 	log.SetFlags(log.Lshortfile)
