@@ -8,7 +8,7 @@ import (
 	"github.com/k0kubun/pp"
 )
 
-var _ = pp.Println
+var p = pp.Println
 
 func init() {
 	log.SetFlags(log.Lshortfile)
@@ -35,7 +35,6 @@ func (x *bigNum) input(s string, base int) {
 		panic("num illegal")
 	}
 	x.integer = splitNum(left)
-
 	reverse(x.integer)
 	x.decimal = splitNum(right)
 }
@@ -58,6 +57,9 @@ func (x *bigNum) String() (r string) {
 }
 
 func splitNum(s string) (r []int) {
+	if s == "" {
+		return
+	}
 	nums := strings.Split(s, ",")
 	for i := 0; i < len(nums); i++ {
 		num, _ := strconv.Atoi(nums[i])
@@ -70,4 +72,46 @@ func reverse(s []int) {
 	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
 		s[i], s[j] = s[j], s[i]
 	}
+}
+
+// func calcX(base, newBase, w int) {
+// 	if newBase%base != 0 && newBase > base {
+// 		panic("新base应该大于旧base并且是其倍数")
+// 	}
+// 	v := make([]int, w)
+//
+// }
+
+func (x *bigNum) changeBase(newBase int) {
+	if newBase%x.base != 0 && newBase > x.base {
+		panic("新base应该大于旧base并且是其倍数")
+	}
+	sum := make([]int, len(x.integer)+2)
+	now := make([]int, len(x.integer)+2)
+	length := 1
+	now[0] = 1
+	for i := 0; i < len(x.integer); i++ {
+		for j := 0; j < length; j++ {
+			sum[j] += x.integer[i] * now[j]
+			sum[j+1] += sum[j] / newBase
+			sum[j] %= newBase
+			now[j] *= x.base
+		}
+		for j := 0; j < length; j++ {
+			now[j+1] += now[j] / newBase
+			now[j] %= newBase
+		}
+		if i != len(x.integer)-1 && now[length] != 0 {
+			length++
+		}
+		// log.Printf("i=%d, length=%d\n", i, length)
+		// log.Println("sum", sum)
+		// log.Println("now", now)
+		// log.Println()
+	}
+	if sum[length] != 0 {
+		length++
+	}
+	x.base = newBase
+	x.integer = sum[:length]
 }
