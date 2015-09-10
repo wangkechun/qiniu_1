@@ -53,5 +53,5 @@ http://www.wolframalpha.com/
 http://reference.wolfram.com/language/tutorial/DigitsInNumbers.zh.html
 
 - todo: 错误处理
-- todo：精度说明
+- todo: 精度说明
 - todo: godoc
