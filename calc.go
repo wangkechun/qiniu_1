@@ -3,11 +3,7 @@ package main
 import (
 	"strconv"
 	"strings"
-
-	godebug "github.com/tj/go-debug"
 )
-
-var debug = godebug.Debug("single")
 
 // BigNum 大数存储
 type BigNum struct {
@@ -18,6 +14,8 @@ type BigNum struct {
 	// 该数字进制
 	base int
 }
+
+const numTable = "0123456789abcdefghijklmnopqrstuvwxyz"
 
 // Input 输入一个大数
 func (x *BigNum) Input(s string, base int) {
@@ -71,13 +69,10 @@ func (x *BigNum) RawString() (r string) {
 	return
 }
 
-const numTable = "0123456789abcdefghijklmnopqrstuvwxyz"
-
 func (x *BigNum) String() (r string) {
 	if x.base >= 10+26 {
 		return x.RawString()
 	}
-
 	var s []byte
 	for i := len(x.integer) - 1; i >= 0; i-- {
 		v := x.integer[i]
