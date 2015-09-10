@@ -14,14 +14,17 @@ func init() {
 	log.SetFlags(log.Lshortfile)
 }
 
-type bigNum struct {
+// BigNum 大数字存储
+type BigNum struct {
+	// 整数部分， 0位置代表个位
 	integer []int
+	// 小数部分， 0代表小数点后面第一位
 	decimal []int
-	base    int
+	// 该数字进制
+	base int
 }
 
-func (x *bigNum) input(s string, base int) {
-	//l := len(s)
+func (x *BigNum) input(s string, base int) {
 	x.base = base
 	r := strings.Split(s, ".")
 	var left, right string
@@ -32,14 +35,14 @@ func (x *bigNum) input(s string, base int) {
 		left = r[0]
 		right = ""
 	} else {
-		panic("num illegal")
+		panic("number illegal" + s)
 	}
 	x.integer = splitNum(left)
 	reverse(x.integer)
 	x.decimal = splitNum(right)
 }
 
-func (x *bigNum) String() (r string) {
+func (x *BigNum) String() (r string) {
 	var s []string
 	for i := len(x.integer) - 1; i >= 0; i-- {
 		s = append(s, strconv.Itoa(x.integer[i]))
@@ -56,24 +59,6 @@ func (x *bigNum) String() (r string) {
 	return
 }
 
-func splitNum(s string) (r []int) {
-	if s == "" {
-		return
-	}
-	nums := strings.Split(s, ",")
-	for i := 0; i < len(nums); i++ {
-		num, _ := strconv.Atoi(nums[i])
-		r = append(r, num)
-	}
-	return
-}
-
-func reverse(s []int) {
-	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
-		s[i], s[j] = s[j], s[i]
-	}
-}
-
 // func calcX(base, newBase, w int) {
 // 	if newBase%base != 0 && newBase > base {
 // 		panic("新base应该大于旧base并且是其倍数")
@@ -82,7 +67,7 @@ func reverse(s []int) {
 //
 // }
 
-func (x *bigNum) changeBaseInteger(newBase int) {
+func (x *BigNum) changeBaseInteger(newBase int) {
 	if newBase%x.base != 0 && newBase > x.base {
 		panic("新base应该大于旧base并且是其倍数")
 	}
@@ -109,13 +94,10 @@ func (x *bigNum) changeBaseInteger(newBase int) {
 		// log.Println("now", now)
 		// log.Println()
 	}
-	if sum[length] != 0 {
-		length++
-	}
-	x.integer = sum[:length]
+	x.integer = trimRightZero(sum)
 }
 
-func (x *bigNum) changeBaseDecimal(newBase int) {
+func (x *BigNum) changeBaseDecimal(newBase int) {
 	if newBase%x.base != 0 && newBase > x.base {
 		panic("新base应该大于旧base并且是其倍数")
 	}
@@ -148,19 +130,15 @@ func (x *bigNum) changeBaseDecimal(newBase int) {
 		// log.Println("now", now)
 		// log.Println()
 	}
-
-	for length > 0 && length <= len(sum) && sum[length-1] == 0 {
-		length--
-	}
-	x.decimal = sum[:length]
+	x.decimal = trimRightZero(sum)
 }
 
-func (x *bigNum) changeBase(newBase int) {
+func (x *BigNum) changeBase(newBase int) {
 	x.changeBaseInteger(newBase)
 	x.changeBaseDecimal(newBase)
 	x.base = newBase
 }
-func (x *bigNum) add(y *bigNum) (z bigNum) {
+func (x *BigNum) add(y *BigNum) (z BigNum) {
 	newBase := x.base * y.base / gcd(x.base, y.base)
 	x.changeBase(newBase)
 	// log.Println("newBase", newBase)
@@ -182,7 +160,7 @@ func (x *bigNum) add(y *bigNum) (z bigNum) {
 		integerLength++
 	}
 	z.integer = z.integer[:integerLength+1]
-	//-----
+	//decimal
 	decimalLength := max(len(x.decimal), len(y.decimal))
 	z.decimal = make([]int, decimalLength+2)
 	for i := decimalLength - 1; i >= 0; i-- {
@@ -205,27 +183,8 @@ func (x *bigNum) add(y *bigNum) (z bigNum) {
 	return
 }
 
-func gcd(a, b int) int {
-	if b == 0 {
-		return a
-	}
-	return gcd(b, a%b)
-}
-
-func max(a, b int) int {
-	if a >= b {
-		return a
-	}
-	return b
-}
-
-func trimRightZero(v []int) []int {
-	i := len(v)
-	for {
-		if i > 0 && v[i-1] > 0 {
-			break
-		}
-		i--
-	}
-	return v[:i]
+// New returns a new BigNum
+func New(s string, base int) (v BigNum) {
+	v.input(s, base)
+	return
 }
