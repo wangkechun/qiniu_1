@@ -112,7 +112,6 @@ func (x *bigNum) changeBaseInteger(newBase int) {
 	if sum[length] != 0 {
 		length++
 	}
-	x.base = newBase
 	x.integer = sum[:length]
 }
 
@@ -150,10 +149,83 @@ func (x *bigNum) changeBaseDecimal(newBase int) {
 		// log.Println()
 	}
 
-	x.base = newBase
-	// pp.Println(sum[:length])
 	for length > 0 && length <= len(sum) && sum[length-1] == 0 {
 		length--
 	}
 	x.decimal = sum[:length]
+}
+
+func (x *bigNum) changeBase(newBase int) {
+	x.changeBaseInteger(newBase)
+	x.changeBaseDecimal(newBase)
+	x.base = newBase
+}
+func (x *bigNum) add(y *bigNum) (z bigNum) {
+	newBase := x.base * y.base / gcd(x.base, y.base)
+	x.changeBase(newBase)
+	// log.Println("newBase", newBase)
+	y.changeBase(newBase)
+	// log.Printf("x=%s  y=%s\n",x,y)
+	integerLength := max(len(x.integer), len(y.integer))
+	z.integer = make([]int, integerLength+2)
+	for i := 0; i < integerLength; i++ {
+		if i < len(x.integer) {
+			z.integer[i] += x.integer[i]
+		}
+		if i < len(y.integer) {
+			z.integer[i] += y.integer[i]
+		}
+		z.integer[i+1] += z.integer[i] / newBase
+		z.integer[i] %= newBase
+	}
+	for z.integer[integerLength] != 0 {
+		integerLength++
+	}
+	z.integer = z.integer[:integerLength+1]
+	//-----
+	decimalLength := max(len(x.decimal), len(y.decimal))
+	z.decimal = make([]int, decimalLength+2)
+	for i := decimalLength - 1; i >= 0; i-- {
+		if i < len(x.decimal) {
+			z.decimal[i] += x.decimal[i]
+		}
+		if i < len(y.decimal) {
+			z.decimal[i] += y.decimal[i]
+		}
+		if i != 0 {
+			z.decimal[i-1] += z.decimal[i] / newBase
+			z.decimal[i] %= newBase
+		}
+	}
+	z.integer[0] += z.decimal[0] / newBase
+	z.decimal[0] %= newBase
+	z.base = newBase
+	z.integer = trimRightZero(z.integer)
+	z.decimal = trimRightZero(z.decimal)
+	return
+}
+
+func gcd(a, b int) int {
+	if b == 0 {
+		return a
+	}
+	return gcd(b, a%b)
+}
+
+func max(a, b int) int {
+	if a >= b {
+		return a
+	}
+	return b
+}
+
+func trimRightZero(v []int) []int {
+	i := len(v)
+	for {
+		if i > 0 && v[i-1] > 0 {
+			break
+		}
+		i--
+	}
+	return v[:i]
 }

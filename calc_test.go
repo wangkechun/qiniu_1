@@ -35,14 +35,6 @@ func TestString(t *testing.T) {
 	assert.Equal(t, x.String(), in)
 }
 
-func TestCalc(t *testing.T) {
-	var x, y bigNum
-	x.input("12,54,45.12,6,8,7", 60)
-	y.input("1,1,0,1.0,1,0,1,1", 2)
-	// pp.Println("x", x)
-	// pp.Println("y", y)
-}
-
 func TestChangeBase(t *testing.T) {
 	var x bigNum
 	x.input("1,2,0,2,2", 3)
@@ -60,4 +52,15 @@ func TestChangeBase2(t *testing.T) {
 	// pp.Println('@', x)
 	// pp.Println(x.String())
 	assert.Equal(t, x.String(), "0.3,2,5,2")
+}
+
+func TestCalc(t *testing.T) {
+	var x, y bigNum
+	x.input("12,54,45.12,6,8,7", 60)
+	y.input("1,1,0,1.0,1,0,1,1", 2)
+	// pp.Println("x", x)
+	// pp.Println("y", y)
+	z := x.add(&y)
+	pp.Println(z.String())
+	pp.Println("12,54,58.32,43,38,7")
 }
