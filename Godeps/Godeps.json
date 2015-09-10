@@ -1,0 +1,21 @@
+{
+	"ImportPath": "qiniu_1",
+	"GoVersion": "go1.5.1",
+	"Deps": [
+		{
+			"ImportPath": "github.com/bmizerany/assert",
+			"Comment": "release.r60-6-ge17e998",
+			"Rev": "e17e99893cb6509f428e1728281c2ad60a6b31e3"
+		},
+		{
+			"ImportPath": "github.com/k0kubun/pp",
+			"Comment": "v2.1.0-8-g36d5366",
+			"Rev": "36d5366f4ec038f9a76dd85c7b29074089bb9b9e"
+		},
+		{
+			"ImportPath": "github.com/tj/go-debug",
+			"Comment": "v2.0.0",
+			"Rev": "ff4a55a20a86994118644bbddc6a216da193cc13"
+		}
+	]
+}
