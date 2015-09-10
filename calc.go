@@ -1,20 +1,15 @@
-package main
+package bignumadd
 
 import (
-	"log"
 	"strconv"
 	"strings"
 
-	"github.com/k0kubun/pp"
+	godebug "github.com/tj/go-debug"
 )
 
-var p = pp.Println
+var debug = godebug.Debug("single")
 
-func init() {
-	log.SetFlags(log.Lshortfile)
-}
-
-// BigNum 大数字存储
+// BigNum 大数存储
 type BigNum struct {
 	// 整数部分， 0位置代表个位
 	integer []int
@@ -24,7 +19,8 @@ type BigNum struct {
 	base int
 }
 
-func (x *BigNum) input(s string, base int) {
+// Input 输入一个大数
+func (x *BigNum) Input(s string, base int) {
 	x.base = base
 	r := strings.Split(s, ".")
 	var left, right string
@@ -58,14 +54,6 @@ func (x *BigNum) String() (r string) {
 	}
 	return
 }
-
-// func calcX(base, newBase, w int) {
-// 	if newBase%base != 0 && newBase > base {
-// 		panic("新base应该大于旧base并且是其倍数")
-// 	}
-// 	v := make([]int, w)
-//
-// }
 
 func (x *BigNum) changeBaseInteger(newBase int) {
 	if newBase%x.base != 0 && newBase > x.base {
@@ -133,16 +121,19 @@ func (x *BigNum) changeBaseDecimal(newBase int) {
 	x.decimal = trimRightZero(sum)
 }
 
-func (x *BigNum) changeBase(newBase int) {
+// ChangeBase 修改数字的进制
+func (x *BigNum) ChangeBase(newBase int) {
 	x.changeBaseInteger(newBase)
 	x.changeBaseDecimal(newBase)
 	x.base = newBase
 }
-func (x *BigNum) add(y *BigNum) (z BigNum) {
+
+// Add 大数相加
+func (x *BigNum) Add(y *BigNum) (z BigNum) {
 	newBase := x.base * y.base / gcd(x.base, y.base)
-	x.changeBase(newBase)
+	x.ChangeBase(newBase)
 	// log.Println("newBase", newBase)
-	y.changeBase(newBase)
+	y.ChangeBase(newBase)
 	// log.Printf("x=%s  y=%s\n",x,y)
 	integerLength := max(len(x.integer), len(y.integer))
 	z.integer = make([]int, integerLength+2)
@@ -185,6 +176,6 @@ func (x *BigNum) add(y *BigNum) (z BigNum) {
 
 // New returns a new BigNum
 func New(s string, base int) (v BigNum) {
-	v.input(s, base)
+	v.Input(s, base)
 	return
 }
