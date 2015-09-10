@@ -47,8 +47,17 @@ func TestChangeBase(t *testing.T) {
 	var x bigNum
 	x.input("1,2,0,2,2", 3)
 	// pp.Println(x)
-	x.changeBase(6)
+	x.changeBaseInteger(6)
 	// pp.Println('@', x)
 	// pp.Println(x.String())
 	assert.Equal(t, x.String(), "3,5,5")
+}
+func TestChangeBase2(t *testing.T) {
+	var x bigNum
+	x.input("0.1,2,0,2", 3)
+	// pp.Println(x)
+	x.changeBaseDecimal(6)
+	// pp.Println('@', x)
+	// pp.Println(x.String())
+	assert.Equal(t, x.String(), "0.3,2,5,2")
 }

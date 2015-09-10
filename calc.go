@@ -82,7 +82,7 @@ func reverse(s []int) {
 //
 // }
 
-func (x *bigNum) changeBase(newBase int) {
+func (x *bigNum) changeBaseInteger(newBase int) {
 	if newBase%x.base != 0 && newBase > x.base {
 		panic("新base应该大于旧base并且是其倍数")
 	}
@@ -114,4 +114,42 @@ func (x *bigNum) changeBase(newBase int) {
 	}
 	x.base = newBase
 	x.integer = sum[:length]
+}
+
+func (x *bigNum) changeBaseDecimal(newBase int) {
+	if newBase%x.base != 0 && newBase > x.base {
+		panic("新base应该大于旧base并且是其倍数")
+	}
+	sum := make([]int, len(x.decimal)+2)
+	now := make([]int, len(x.decimal)+2)
+	length := 1
+	now[0] = newBase / x.base
+	for i := 0; i < len(x.decimal); i++ {
+		for j := 0; j < length; j++ {
+			sum[j] += x.decimal[i] * now[j]
+			now[j] *= newBase / x.base
+		}
+		for j := length - 1; j > 0; j-- {
+			sum[j-1] += sum[j] / newBase
+			sum[j] %= newBase
+		}
+		for j := length - 1; j >= 0; j-- {
+			now[j+1] = now[j] % newBase
+			if j != 0 {
+				now[j-1] += now[j] / newBase
+			}
+		}
+		now[0] /= newBase
+
+		if i != len(x.decimal)-1 && now[length] != 0 {
+			length++
+		}
+		// log.Printf("i=%d, length=%d\n", i, length)
+		// log.Println("sum", sum)
+		// log.Println("now", now)
+		// log.Println()
+	}
+
+	x.base = newBase
+	x.decimal = sum[:length]
 }
