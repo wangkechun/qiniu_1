@@ -22,6 +22,12 @@ type BigNum struct {
 // Input 输入一个大数
 func (x *BigNum) Input(s string, base int) {
 	x.base = base
+	charType := true
+	if s[0] == '[' && s[len(s)-1] == ']' {
+		s = s[1 : len(s)-1]
+		charType = false
+	}
+
 	r := strings.Split(s, ".")
 	var left, right string
 	if len(r) == 2 {
@@ -33,9 +39,17 @@ func (x *BigNum) Input(s string, base int) {
 	} else {
 		panic("number illegal" + s)
 	}
-	x.integer = splitNum(left)
+	if charType {
+		x.integer = splitChar(left)
+		x.decimal = splitChar(right)
+	} else {
+		x.integer = splitNum(left)
+		x.decimal = splitNum(right)
+	}
 	reverse(x.integer)
-	x.decimal = splitNum(right)
+	x.integer = trimRightZero(x.integer)
+	x.decimal = trimRightZero(x.decimal)
+	x.Format()
 }
 
 func (x *BigNum) String() (r string) {
@@ -52,6 +66,7 @@ func (x *BigNum) String() (r string) {
 		}
 		r += strings.Join(s, ",")
 	}
+	r = "[" + r + "]"
 	return
 }
 
@@ -126,6 +141,7 @@ func (x *BigNum) ChangeBase(newBase int) {
 	x.changeBaseInteger(newBase)
 	x.changeBaseDecimal(newBase)
 	x.base = newBase
+	x.Format()
 }
 
 // Add 大数相加
@@ -169,8 +185,7 @@ func (x *BigNum) Add(y *BigNum) (z BigNum) {
 	z.integer[0] += z.decimal[0] / newBase
 	z.decimal[0] %= newBase
 	z.base = newBase
-	z.integer = trimRightZero(z.integer)
-	z.decimal = trimRightZero(z.decimal)
+	z.Format()
 	return
 }
 
@@ -178,4 +193,13 @@ func (x *BigNum) Add(y *BigNum) (z BigNum) {
 func New(s string, base int) (v BigNum) {
 	v.Input(s, base)
 	return
+}
+
+//Format 格式化大数， 去掉多余的0
+func (x *BigNum) Format() {
+	x.integer = trimRightZero(x.integer)
+	x.decimal = trimRightZero(x.decimal)
+	if len(x.integer) == 0 {
+		x.integer = []int{0}
+	}
 }

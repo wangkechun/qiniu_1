@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -22,7 +23,7 @@ func max(a, b int) int {
 func trimRightZero(v []int) []int {
 	i := len(v)
 	for {
-		if i > 0 && v[i-1] > 0 {
+		if i <= 0 || v[i-1] > 0 {
 			break
 		}
 		i--
@@ -30,14 +31,35 @@ func trimRightZero(v []int) []int {
 	return v[:i]
 }
 
+// 1,2,3
 func splitNum(s string) (r []int) {
 	if s == "" {
 		return
 	}
 	nums := strings.Split(s, ",")
+
 	for i := 0; i < len(nums); i++ {
-		num, _ := strconv.Atoi(nums[i])
+		num, err := strconv.Atoi(nums[i])
+		if err != nil {
+			panic(fmt.Sprintf("illegal number %s", nums[i]))
+		}
 		r = append(r, num)
+	}
+	return
+}
+
+func splitChar(s string) (r []int) {
+	for _, v := range s {
+		n := int(v)
+		if n >= '0' && n <= '9' {
+			r = append(r, n-'0')
+		} else if n >= 'a' && n <= 'z' {
+			r = append(r, n-'a'+10)
+		} else if n >= 'A' && n <= 'Z' {
+			r = append(r, n-'A'+10)
+		} else {
+			panic(fmt.Sprintf("illegal character %v", v))
+		}
 	}
 	return
 }
