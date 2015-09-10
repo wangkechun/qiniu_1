@@ -151,5 +151,9 @@ func (x *bigNum) changeBaseDecimal(newBase int) {
 	}
 
 	x.base = newBase
+	// pp.Println(sum[:length])
+	for length > 0 && length <= len(sum) && sum[length-1] == 0 {
+		length--
+	}
 	x.decimal = sum[:length]
 }
