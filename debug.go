@@ -1,9 +1,9 @@
 package main
 
 import (
-	"qiniu_1/Godeps/_workspace/src/github.com/bmizerany/assert"
-	"qiniu_1/Godeps/_workspace/src/github.com/k0kubun/pp"
-	godebug "qiniu_1/Godeps/_workspace/src/github.com/tj/go-debug"
+	"github.com/bmizerany/assert"
+	"github.com/k0kubun/pp"
+	godebug "github.com/tj/go-debug"
 )
 
 var print = pp.Print

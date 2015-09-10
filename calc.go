@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -210,4 +211,8 @@ func (x *BigNum) Format() {
 	if len(x.integer) == 0 {
 		x.integer = []int{0}
 	}
+}
+
+func main() {
+	fmt.Println("please run \"make test\"")
 }

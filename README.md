@@ -25,8 +25,9 @@
 进位处理
 
 运行：
-go get github.com/bmizerany/assert && go get github.com/k0kubun/pp && go get github.com/tj/go-debug
-go test -v
+make install
+make test
+
 
 生成测试数据可以使用mathematica等工具:
 http://www.wolframalpha.com/
