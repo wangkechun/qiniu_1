@@ -21,14 +21,13 @@ func max(a, b int) int {
 }
 
 func trimRightZero(v []int) []int {
-	i := len(v)
-	for {
-		if i <= 0 || v[i-1] > 0 {
-			break
+	l := len(v)
+	for i := l - 1; i >= 0; i-- {
+		if v[i] > 0 {
+			return v[:i+1]
 		}
-		i--
 	}
-	return v[:i]
+	return []int{}
 }
 
 // 1,2,3
@@ -39,7 +38,11 @@ func splitNum(s string) (r []int) {
 	nums := strings.Split(s, ",")
 
 	for i := 0; i < len(nums); i++ {
-		num, err := strconv.Atoi(nums[i])
+		v := nums[i]
+		if len(v) == 0 {
+			continue
+		}
+		num, err := strconv.Atoi(v)
 		if err != nil {
 			panic(fmt.Sprintf("illegal number %s", nums[i]))
 		}
