@@ -52,7 +52,8 @@ func (x *BigNum) Input(s string, base int) {
 	x.Format()
 }
 
-func (x *BigNum) String() (r string) {
+// RawString 转换成 [1,2,3] 类似的形式
+func (x *BigNum) RawString() (r string) {
 	var s []string
 	for i := len(x.integer) - 1; i >= 0; i-- {
 		s = append(s, strconv.Itoa(x.integer[i]))
@@ -70,10 +71,29 @@ func (x *BigNum) String() (r string) {
 	return
 }
 
-func (x *BigNum) changeBaseInteger(newBase int) {
-	if newBase%x.base != 0 && newBase > x.base {
-		panic("新base应该大于旧base并且是其倍数")
+const numTable = "0123456789abcdefghijklmnopqrstuvwxyz"
+
+func (x *BigNum) String() (r string) {
+	if x.base >= 10+26 {
+		return x.RawString()
 	}
+
+	var s []byte
+	for i := len(x.integer) - 1; i >= 0; i-- {
+		v := x.integer[i]
+		s = append(s, numTable[v])
+	}
+	if len(x.decimal) > 0 {
+		s = append(s, ',')
+		for i := 0; i < len(x.decimal); i++ {
+			v := x.decimal[i]
+			s = append(s, numTable[v])
+		}
+	}
+	return string(s)
+}
+
+func (x *BigNum) changeBaseInteger(newBase int) {
 	sum := make([]int, len(x.integer)+2)
 	now := make([]int, len(x.integer)+2)
 	length := 1
@@ -101,7 +121,10 @@ func (x *BigNum) changeBaseInteger(newBase int) {
 }
 
 func (x *BigNum) changeBaseDecimal(newBase int) {
-	if newBase%x.base != 0 && newBase > x.base {
+	if len(x.decimal) == 0 {
+		return
+	}
+	if newBase%x.base != 0 || newBase < x.base {
 		panic("新base应该大于旧base并且是其倍数")
 	}
 	sum := make([]int, len(x.decimal)+2)
