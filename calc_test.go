@@ -1,4 +1,4 @@
-package bignumadd
+package main
 
 import (
 	"testing"
