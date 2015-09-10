@@ -11,16 +11,27 @@
 （ 语言不限，使用最熟悉的语言。 ）
 
 思路：
-不同进制小数加法， 要求不能损失精度， 所以只能转换成它们进制的最小公倍数再来运算。
+不同进制小数加法，要求不能损失精度
+可以转换成它们进制的最小公倍数再运算就可以规避精度问题。
+小数的进制转换处理较为麻烦，具体细节就不解释了。
 如果输入是整数的话，结果可以转换成任意进制。
+
 输入超过36进制的数字，采用[1,2.3,4]来输入,
 否则可以使用10个数字加26个字母来表示(不区分大小写).
 输出逻辑同输入。
 
-生成测试数据可以使用mathematica: http://reference.wolfram.com/language/tutorial/DigitsInNumbers.zh.html
+注意点：
+输出的时候去掉首尾的0， 整数输出不包含".0"。
+进位处理
+
+运行：
+go get github.com/bmizerany/assert && go get github.com/k0kubun/pp && go get github.com/tj/go-debug
+go test -v
+
+生成测试数据可以使用mathematica等工具:
+http://www.wolframalpha.com/
+http://reference.wolfram.com/language/tutorial/DigitsInNumbers.zh.html
 
 todo: 错误处理
 todo：精度说明
-todo: 字母支持
-todo： 包名修改
 todo: godoc

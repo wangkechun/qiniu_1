@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -42,6 +43,18 @@ func TestChangeBase2(t *testing.T) {
 	equal(t, x.RawString(), "[0.3,2,5,2]")
 }
 
+func TestChangeBase3(t *testing.T) {
+	s := strings.Repeat("101", 100)
+	x := New(s, 2)
+	x.ChangeBase(10)
+	equal(t, x.String(), "1455025697381775775906032634578127257893905995475668750454386035253129499830954790130998125")
+}
+
+func TestChangeBase4(t *testing.T) {
+	x := New("0.10101", 2)
+	x.ChangeBase(10)
+	equal(t, x.String(), "0.65625")
+}
 func TestShortInput(t *testing.T) {
 	x := New("[1,1,0,1.0,1,0,1,1]", 2)
 	y := New("1101.01011", 2)
@@ -67,4 +80,12 @@ func TestCalc2(t *testing.T) {
 	z := x.Add(&y)
 	z.ChangeBase(10)
 	equal(t, z.String(), "11")
+}
+
+func TestCalc3(t *testing.T) {
+	x := New("19.99", 10)
+	y := New("0.01", 10)
+	z := x.Add(&y)
+	z.ChangeBase(10)
+	equal(t, z.String(), "20")
 }

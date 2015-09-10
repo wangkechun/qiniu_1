@@ -79,7 +79,7 @@ func (x *BigNum) String() (r string) {
 		s = append(s, numTable[v])
 	}
 	if len(x.decimal) > 0 {
-		s = append(s, ',')
+		s = append(s, '.')
 		for i := 0; i < len(x.decimal); i++ {
 			v := x.decimal[i]
 			s = append(s, numTable[v])
@@ -107,10 +107,6 @@ func (x *BigNum) changeBaseInteger(newBase int) {
 		if i != len(x.integer)-1 && now[length] != 0 {
 			length++
 		}
-		// log.Printf("i=%d, length=%d\n", i, length)
-		// log.Println("sum", sum)
-		// log.Println("now", now)
-		// log.Println()
 	}
 	x.integer = trimRightZero(sum)
 }
@@ -146,10 +142,6 @@ func (x *BigNum) changeBaseDecimal(newBase int) {
 		if i != len(x.decimal)-1 && now[length] != 0 {
 			length++
 		}
-		// log.Printf("i=%d, length=%d\n", i, length)
-		// log.Println("sum", sum)
-		// log.Println("now", now)
-		// log.Println()
 	}
 	x.decimal = trimRightZero(sum)
 }
@@ -166,9 +158,7 @@ func (x *BigNum) ChangeBase(newBase int) {
 func (x *BigNum) Add(y *BigNum) (z BigNum) {
 	newBase := x.base * y.base / gcd(x.base, y.base)
 	x.ChangeBase(newBase)
-	// log.Println("newBase", newBase)
 	y.ChangeBase(newBase)
-	// log.Printf("x=%s  y=%s\n",x,y)
 	integerLength := max(len(x.integer), len(y.integer))
 	z.integer = make([]int, integerLength+2)
 	for i := 0; i < integerLength; i++ {
