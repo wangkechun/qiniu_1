@@ -1,5 +1,5 @@
 test:
-	go test -v
+	DEBUG=* go test -v
 
 install:
 	go get -u -v -x github.com/bmizerany/assert

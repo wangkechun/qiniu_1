@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -31,9 +32,10 @@ func trimRightZero(v []int) []int {
 }
 
 // 1,2,3
-func splitNum(s string) (r []int) {
+func splitNum(s string) ([]int, error) {
+	var r []int
 	if s == "" {
-		return
+		return r, nil
 	}
 	nums := strings.Split(s, ",")
 
@@ -44,14 +46,14 @@ func splitNum(s string) (r []int) {
 		}
 		num, err := strconv.Atoi(v)
 		if err != nil {
-			panic(fmt.Sprintf("illegal number %s", nums[i]))
+			return r, err
 		}
 		r = append(r, num)
 	}
-	return
+	return r, nil
 }
 
-func splitChar(s string) (r []int) {
+func splitChar(s string) (r []int, err error) {
 	for _, v := range s {
 		n := int(v)
 		if n >= '0' && n <= '9' {
@@ -61,10 +63,10 @@ func splitChar(s string) (r []int) {
 		} else if n >= 'A' && n <= 'Z' {
 			r = append(r, n-'A'+10)
 		} else {
-			panic(fmt.Sprintf("illegal character %v", v))
+			return r, errors.New(fmt.Sprint("illegal character ", v))
 		}
 	}
-	return
+	return r, err
 }
 
 func reverse(s []int) {

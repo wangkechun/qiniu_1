@@ -55,6 +55,14 @@ func TestChangeBase4(t *testing.T) {
 	x.ChangeBase(10)
 	equal(t, x.String(), "0.65625")
 }
+
+func TestChangeBase5(t *testing.T) {
+	x := New("0.10101", 2)
+	err := x.ChangeBase(3)
+	if err == nil {
+		t.Fail()
+	}
+}
 func TestShortInput(t *testing.T) {
 	x := New("[1,1,0,1.0,1,0,1,1]", 2)
 	y := New("1101.01011", 2)

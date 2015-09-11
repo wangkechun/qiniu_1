@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -19,7 +20,7 @@ type BigNum struct {
 const numTable = "0123456789abcdefghijklmnopqrstuvwxyz"
 
 // Input 输入一个大数
-func (x *BigNum) Input(s string, base int) {
+func (x *BigNum) Input(s string, base int) error {
 	x.base = base
 	charType := true
 	if s[0] == '[' && s[len(s)-1] == ']' {
@@ -36,19 +37,34 @@ func (x *BigNum) Input(s string, base int) {
 		left = r[0]
 		right = ""
 	} else {
-		panic("number illegal" + s)
+		return errors.New("number illegal" + s)
 	}
+	var err error
 	if charType {
-		x.integer = splitChar(left)
-		x.decimal = splitChar(right)
+		x.integer, err = splitChar(left)
+		if err != nil {
+			return err
+		}
+		x.decimal, err = splitChar(right)
+		if err != nil {
+			return err
+		}
 	} else {
-		x.integer = splitNum(left)
-		x.decimal = splitNum(right)
+		var err error
+		x.integer, err = splitNum(left)
+		if err != nil {
+			return err
+		}
+		x.decimal, err = splitNum(right)
+		if err != nil {
+			return err
+		}
 	}
 	reverse(x.integer)
 	x.integer = trimRightZero(x.integer)
 	x.decimal = trimRightZero(x.decimal)
 	x.Format()
+	return nil
 }
 
 // RawString 转换成 [1,2,3] 类似的形式
@@ -112,12 +128,12 @@ func (x *BigNum) changeBaseInteger(newBase int) {
 	x.integer = trimRightZero(sum)
 }
 
-func (x *BigNum) changeBaseDecimal(newBase int) {
+func (x *BigNum) changeBaseDecimal(newBase int) (err error) {
 	if len(x.decimal) == 0 {
 		return
 	}
 	if newBase%x.base != 0 || newBase < x.base {
-		panic("新base应该大于旧base并且是其倍数")
+		return errors.New("新base应该大于旧base并且是其倍数")
 	}
 	sum := make([]int, len(x.decimal)+2)
 	now := make([]int, len(x.decimal)+2)
@@ -145,14 +161,19 @@ func (x *BigNum) changeBaseDecimal(newBase int) {
 		}
 	}
 	x.decimal = trimRightZero(sum)
+	return
 }
 
 // ChangeBase 修改数字的进制
-func (x *BigNum) ChangeBase(newBase int) {
+func (x *BigNum) ChangeBase(newBase int) error {
 	x.changeBaseInteger(newBase)
-	x.changeBaseDecimal(newBase)
+	err := x.changeBaseDecimal(newBase)
+	if err != nil {
+		return err
+	}
 	x.base = newBase
 	x.Format()
+	return nil
 }
 
 // Add 大数相加

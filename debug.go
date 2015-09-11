@@ -9,5 +9,5 @@ import (
 var print = pp.Print
 var printf = pp.Printf
 var println = pp.Println
-var debug = godebug.Debug("single")
+var debug = godebug.Debug("bigNum")
 var equal = assert.Equal
