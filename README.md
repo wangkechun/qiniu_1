@@ -52,4 +52,37 @@ http://www.wolframalpha.com/
 
 http://reference.wolfram.com/language/tutorial/DigitsInNumbers.zh.html
 
-- todo: godoc
+#### godoc
+```
+PACKAGE DOCUMENTATION
+
+package bignum
+    bignum 七牛云存储二面 Open Question 异进制加法：输入两个数以及其对应的进制，输出两数之合及其进制。
+
+TYPES
+
+type BigNum struct {
+    // contains filtered or unexported fields
+}
+    BigNum 大数存储
+
+func New(s string, base int) (v BigNum)
+    New returns a new BigNum
+
+func (x *BigNum) Add(y *BigNum) (z BigNum)
+    Add 大数相加
+
+func (x *BigNum) ChangeBase(newBase int) error
+    ChangeBase 修改数字的进制
+
+func (x *BigNum) Format()
+    Format 格式化大数， 去掉多余的0
+
+func (x *BigNum) Input(s string, base int) error
+    Input 输入一个大数
+
+func (x *BigNum) RawString() (r string)
+    RawString 转换成 [1,2,3] 类似的形式
+
+func (x *BigNum) String() (r string)
+```

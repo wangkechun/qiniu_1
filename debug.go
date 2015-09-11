@@ -1,4 +1,4 @@
-package main
+package bignum
 
 import (
 	"github.com/bmizerany/assert"

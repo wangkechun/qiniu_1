@@ -1,4 +1,4 @@
-package main
+package bignum
 
 import "testing"
 
