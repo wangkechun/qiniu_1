@@ -1,0 +1,7 @@
+build:
+  image: golang:1.4.3
+  commands:
+    - go version
+    - make install
+    - make test
+
